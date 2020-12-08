@@ -35,6 +35,22 @@ For the end-user contract signing route:
  ✔ Keeps track of whom has signed what documents.
  ✔ Regularly reminds recipients to sign the documents via email.
 
+## Customer Stories:
+
+**As a Corporate Executive,**
+ * I want to have all of my employees, contractors and apprentices sign Non-Disclosure Agreements and other contracts.
+ * I want a record Who, What and When each document was sent to, signed, and returned.
+ * I want an easy-to-use Document Signer for the end-user.
+ * I want emails to be sent daily reminding each person of outstanding contracts that need to be signed.
+
+## Minimum Viable Product (MVP)
+
+ 1. Store a Non-Disclosure Agreement as Electronically Signable Form.
+ 2. Display Contract via a Link created per Recipient based upon their Email Address.
+ 3. Record when the NDA was sent to each recipient.
+ 4. Provide a simple Electronic Signature apparatus for each contract, similar to DocuSign.
+ 5. Display a Report showing Who, What and When each document was sent to, signed, and returned.
+
 ## Testing
 
 ```bash
