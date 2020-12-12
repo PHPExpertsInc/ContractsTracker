@@ -15,22 +15,36 @@
 namespace PHPExperts\ContractsTracker\Http\Controllers\Guests;
 
 use Illuminate\Http\Client\Request;
-use Illuminate\Http\JsonResponse;
 
 class ContractController
 {
     public function show(string $contractId)
     {
-        return new JsonResponse([
-            'id' => $contractId,
+        $contractName = 'SAMPLE';
+
+        $contractFile = storage_path() . "/contracts/{$contractId}.md";
+        //$contract = file_get_contents($contractFile)
+
+        if (!file_exists($contractFile)) {
+            return view('ContractsTracker::guests.showContract', [
+                'foundContract' => false,
+                'contractId'    => $contractId,
+                'contractTitle' => 'Could not find the contract',
+            ]);
+        }
+
+        $Parsedown = new \Parsedown();
+        $contractHTML = $Parsedown->text(file_get_contents($contractFile));
+
+        return view('ContractsTracker::guests.showContract', [
+            'foundContract' => true,
+            'contractId'    => $contractId,
+            'contractTitle' => $contractName,
+            'contractHTML'  => $contractHTML,
         ]);
     }
 
     public function store(Request $request)
-    {
-    }
-
-    public function update(Request $request, string $contractId)
     {
     }
 }
