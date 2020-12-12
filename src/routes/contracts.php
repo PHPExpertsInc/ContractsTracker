@@ -12,20 +12,19 @@
  * This file is licensed under the Creative Commons Attribution v4.0 License.
  */
 
+use Illuminate\Support\Facades\Route;
+use PHPExperts\ContractsTracker\Http\Controllers\Api\ContractController;
+use PHPExperts\ContractsTracker\Http\Controllers\Api\SignedContractController;
 use PHPExperts\JWTGuardian\Http\Controllers\Auth\PasswordAuthController;
 
-Route::group(['prefix' => 'auth/users'], function () {
-    Route::post('/register', [PasswordAuthController::class, 'register']);
-    Route::post('/login', [PasswordAuthController::class, 'login']);
-    Route::post('/logout', [PasswordAuthController::class, 'logout']);
+Route::group(['prefix' => 'contracts-tracker/api'], function () {
+    Route::post('/contract',       [ContractController::class, 'store']);
+    Route::get('/contract/{id}',   [ContractController::class, 'show']);
+    Route::patch('/contract/{id}', [ContractController::class, 'update']);
 
-    Route::get('/token/{email}', [PasswordAuthController::class, 'requestResetToken']);
-    Route::get('/token/{email}/{token}', [PasswordAuthController::class, 'verifyResetToken']);
-
-    Route::patch('/{userId}/password', [PasswordAuthController::class, 'resetPassword']);
-
-    Route::put('/{userId}/password', [PasswordAuthController::class, 'updatePassword'])
-        ->middleware('assign.guard:users');
+    Route::post('/signed',       [SignedContractController::class, 'store']);
+    Route::get('/signed/{id}',   [SignedContractController::class, 'show']);
+    Route::patch('/signed/{id}', [SignedContractController::class, 'update']);
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => 'assign.guard:admins'], function () {
