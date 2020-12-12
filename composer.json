@@ -1,11 +1,11 @@
 {
-    "name": "phpexperts/skeleton",
-    "description": "A quick and easy standard PHP skeleton.",
+    "name": "phpexperts/contract-signer",
+    "description": "Laravel package for easily and quickly getting contracts signed by people.",
     "keywords": [
-        "universal package layout",
-        "standard package layout",
-        "new project",
-        "project layout"
+        "contracts",
+        "contract signer",
+        "docusign",
+        "laravel package"
     ],
     "homepage": "https://www.phpexperts.pro/",
     "license": "MIT",
@@ -20,7 +20,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.3|8.*",
         "ext-json": "*",
         "illuminate/support": ">=6.0"
     },
@@ -42,7 +42,18 @@
         "psr-4": { "PHPExperts\\ContractSigner\\Tests\\" : "tests/" }
     },
     "config": {
-        "classmap-authoritative": true
+        "classmap-authoritative": true,
+        "preferred-install": "dist",
+        "platform": {
+            "php": "7.3.0"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PHPExperts\\ContractSigner\\ContractSignerServiceProvider"
+            ]
+        }
     },
     "scripts": {
         "post-create-project-cmd": [
