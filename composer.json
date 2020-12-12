@@ -1,8 +1,10 @@
 {
-    "name": "phpexperts/contract-signer",
+    "name": "phpexperts/contracts-tracker",
     "description": "Laravel package for easily and quickly getting contracts signed by people.",
     "keywords": [
         "contracts",
+        "documents tracker",
+        "compliance",
         "contract signer",
         "docusign",
         "laravel package"
@@ -35,11 +37,11 @@
     },
     "autoload": {
         "psr-4": {
-            "PHPExperts\\ContractSigner\\" : "src/"
+            "PHPExperts\\ContractsTracker\\" : "src/"
         }
     },
     "autoload-dev": {
-        "psr-4": { "PHPExperts\\ContractSigner\\Tests\\" : "tests/" }
+        "psr-4": { "PHPExperts\\ContractsTracker\\Tests\\" : "tests/" }
     },
     "config": {
         "classmap-authoritative": true,
@@ -51,7 +53,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "PHPExperts\\ContractSigner\\ContractSignerServiceProvider"
+                "PHPExperts\\ContractsTracker\\ContractsTrackerServiceProvider"
             ]
         }
     },
