@@ -12,8 +12,6 @@
  * This file is licensed under the Creative Commons Attribution v4.0 License.
  */
 
-namespace PHPExperts\ContractsTracker\db_migrations;
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -28,7 +26,7 @@ class ContractsTrackerMigration extends Migration
     public function up()
     {
         Schema::create('contracts', function (Blueprint $table) {
-            $table->char('id', 22);
+            $table->char('id', 22)->primary();
             $table->string('name');
             $table->text('description');
             $table->string('filename');
@@ -37,7 +35,7 @@ class ContractsTrackerMigration extends Migration
         });
 
         Schema::create('contracts_delivered', function (Blueprint $table) {
-            $table->char('id', 22);
+            $table->char('id', 22)->primary();
             $table->char('contract_id', 22);
             $table->string('email');
             $table->dateTime('delivered_at');
@@ -45,8 +43,8 @@ class ContractsTrackerMigration extends Migration
             $table->string('signed_contract_url');
 
             $table->foreign('contract_id')
-                ->references('contracts')
-                ->on('id');
+                ->references('id')
+                ->on('contracts');
 
             $table->index('contract_id');
             $table->index('email');

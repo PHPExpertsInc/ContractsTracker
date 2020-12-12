@@ -14,7 +14,10 @@
 
 namespace PHPExperts\ContractsTracker\Http\Controllers\Api;
 
+use Faker\Factory as Faker;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use PHPExperts\ConciseUuid\ConciseUuid;
 
 class SignedContractController
 {
@@ -27,9 +30,21 @@ class SignedContractController
 
     public function store(Request $request)
     {
+        $faker = Faker::create();
+
+        return new JsonResponse([
+            'id'    => ConciseUuid::generateNewId(),
+            'email' => $faker->unique()->email,
+        ]);
     }
 
     public function update(Request $request, string $signedContractId)
     {
+        $faker = Faker::create();
+
+        return new JsonResponse([
+            'id'    => $signedContractId,
+            'email' => $faker->unique()->email,
+        ]);
     }
 }

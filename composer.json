@@ -37,6 +37,7 @@
     },
     "autoload": {
         "psr-4": {
+            "PHPExperts\\ContractsTracker\\Database\\Migrations\\" : "database/migrations/",
             "PHPExperts\\ContractsTracker\\" : "src/"
         }
     },

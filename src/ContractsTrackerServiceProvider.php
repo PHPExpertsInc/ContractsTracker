@@ -36,8 +36,8 @@ class ContractsTrackerServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $path = realpath(__DIR__ . '/../config/contracts-tracker.php');
-        $this->mergeConfigFrom($path, 'contracts-tracker');
+        $path = realpath(__DIR__ . '/../config/contract-signer.php');
+        $this->mergeConfigFrom($path, 'contract-signer');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         $this->loadRoutesFrom(__DIR__ . '/routes/contracts.php');
