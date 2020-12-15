@@ -14,10 +14,13 @@
 
 namespace PHPExperts\ContractsTracker\Http\Controllers\Api;
 
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
+use PHPExperts\ContractsTracker\Models\Contract;
 
-class ContractController
+class ContractController extends Controller
 {
     public function show(string $contractId)
     {
@@ -28,6 +31,21 @@ class ContractController
 
     public function store(Request $request)
     {
+        // Save the contract to the database.
+        $contract = Contract::query()->create([
+            'name'        => $request->input('name'),
+            'description' => $request->input('description'),
+            'is_active'   => false,
+        ]);
+        $contractId = $contract->id;
+
+        // Attempt to store the contract.
+        $saveStatus = Storage::put("contracts/$contractId.md", $request->input('contract'));
+
+        return new JsonResponse([
+            'success'    => $saveStatus,
+            'contractId' => $contractId,
+        ]);
     }
 
     public function update(Request $request, string $contractId)

@@ -18,6 +18,7 @@ use PHPExperts\ContractsTracker\Http\Controllers\Api\ContractController;
 use PHPExperts\ContractsTracker\Http\Controllers\Api\SignedContractController;
 
 use PHPExperts\ContractsTracker\Http\Controllers\Guests\ContractController as GuestsContractController;
+use PHPExperts\ContractsTracker\Http\Controllers\Admin\ContractController as AdminContractController;
 
 
 /**
@@ -69,6 +70,26 @@ Route::group(['prefix' => 'contracts-tracker/api'], function () {
     Route::post('/signed/{id}/image', [ArchivedContractController::class, 'store']);
 });
 
-Route::group(['prefix' => 'contracts-tracker/admin', 'middleware' => 'assign.guard:admins'], function () {
-    // would begin with /admin/whatever
+//Route::group(['prefix' => 'contracts-tracker/admin', 'middleware' => 'assign.guard:admins'], function () {
+// @FIXME: READD USER AUTHENTICATION!!
+Route::group(['prefix' => 'contracts-tracker/admin'], function () {
+    Route::get('/contract', [AdminContractController::class, 'index']);
+    Route::get('/contract/{id}', [AdminContractController::class, 'show']);
+    Route::patch('/contract/{id}', [AdminContractController::class, 'show']);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

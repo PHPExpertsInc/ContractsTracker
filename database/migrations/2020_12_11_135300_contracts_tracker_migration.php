@@ -29,7 +29,7 @@ class ContractsTrackerMigration extends Migration
             $table->char('id', 22)->primary();
             $table->string('name');
             $table->text('description');
-            $table->string('filename');
+            $table->string('filename')->nullable();
             $table->boolean('is_active');
             $table->timestamps();
         });

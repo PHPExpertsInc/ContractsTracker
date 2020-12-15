@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{$contractTitle}}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" async="">
     <style>
 section.contract {
     padding: 20px 30px;
@@ -32,7 +33,7 @@ section.contract button {
         <p>Hello,</p>
         <p>Please read and sign this contract as soon as possible.</p>
     </header>
-    <section class="contract">
+    <section class="contract" contenteditable="true">
 {!! $contractHTML !!}
         <button class="btn btn-primary">Sign and Submit</button>
     </section>
