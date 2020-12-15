@@ -30,21 +30,20 @@ class ContractController
         $contractFile = storage_path() . "/app/contracts/{$contractId}.md";
 
         if (!file_exists($contractFile)) {
-            return view('ContractsTracker::guests.showContract', [
+            return view('ContractsTracker::admin.editContract', [
                 'foundContract' => false,
                 'contractId'    => $contractId,
                 'contractTitle' => 'Could not find the contract',
             ]);
         }
 
-        $Parsedown = new \Parsedown();
-        $contractHTML = $Parsedown->text(file_get_contents($contractFile));
+        $contractText = file_get_contents($contractFile);
 
-        return view('ContractsTracker::guests.showContract', [
+        return view('ContractsTracker::admin.editContract', [
             'foundContract' => true,
             'contractId'    => $contractId,
             'contractTitle' => $contractName,
-            'contractHTML'  => $contractHTML,
+            'contractText'  => $contractText,
         ]);
     }
 

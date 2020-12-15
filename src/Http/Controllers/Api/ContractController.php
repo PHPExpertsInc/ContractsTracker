@@ -50,5 +50,18 @@ class ContractController extends Controller
 
     public function update(Request $request, string $contractId)
     {
+        /** @var Contract $contract */
+        $contract = Contract::query()->findOrFail($contractId);
+        $contract->name = $request->input('name');
+        $contract->description = $request->input('description');
+        $contract->save();
+
+        // Attempt to update the contract.
+        $saveStatus = Storage::put("contracts/$contractId.md", $request->input('contract'));
+
+        return new JsonResponse([
+            'success'    => $saveStatus,
+            'contractId' => $contractId,
+        ]);
     }
 }

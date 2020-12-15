@@ -60,7 +60,7 @@ Route::group(['prefix' => 'contracts-tracker/api'], function () {
     Route::post('/contract',       [ContractController::class, 'store']);
     // This is the API request that will deliver details of how to find the contract to the frontend.
     Route::get('/contract/{id}',   [ContractController::class, 'show']);
-    Route::patch('/contract/{id}', [ContractController::class, 'update']);
+    Route::put('/contract/{id}',   [ContractController::class, 'update']);
 
     Route::post('/signed',            [SignedContractController::class, 'store']);
     Route::get('/signed/{id}',        [SignedContractController::class, 'show']);
