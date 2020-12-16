@@ -13,9 +13,11 @@
  */
 
 use Illuminate\Support\Facades\Route;
+use PHPExperts\ContractsTracker\Http\Controllers\Admin\AvailableContractController;
 use PHPExperts\ContractsTracker\Http\Controllers\Api\ArchivedContractController;
 use PHPExperts\ContractsTracker\Http\Controllers\Api\ContractController;
 use PHPExperts\ContractsTracker\Http\Controllers\Api\SignedContractController;
+use PHPExperts\ContractsTracker\Http\Controllers\Api\UnSignedContractController;
 
 use PHPExperts\ContractsTracker\Http\Controllers\Guests\ContractController as GuestsContractController;
 use PHPExperts\ContractsTracker\Http\Controllers\Admin\ContractController as AdminContractController;
@@ -62,9 +64,14 @@ Route::group(['prefix' => 'contracts-tracker/api'], function () {
     Route::get('/contract/{id}',   [ContractController::class, 'show']);
     Route::put('/contract/{id}',   [ContractController::class, 'update']);
 
-    Route::post('/signed',            [SignedContractController::class, 'store']);
-    Route::get('/signed/{id}',        [SignedContractController::class, 'show']);
-    Route::patch('/signed/{id}',      [SignedContractController::class, 'update']);
+    Route::get('/unsigned',        [UnSignedContractController::class, 'index']);
+    Route::post('/unsigned',       [UnSignedContractController::class, 'store']);
+    Route::get('/unsigned/{id}',   [UnSignedContractController::class, 'show']);
+    Route::patch('/unsigned/{id}', [UnSignedContractController::class, 'update']);
+
+    Route::post('/signed',         [SignedContractController::class, 'store']);
+    Route::get('/signed/{id}',     [SignedContractController::class, 'show']);
+    Route::patch('/signed/{id}',   [SignedContractController::class, 'update']);
 
     Route::get('/signed/{id}/image',  [ArchivedContractController::class, 'show']);
     Route::post('/signed/{id}/image', [ArchivedContractController::class, 'store']);
@@ -73,9 +80,12 @@ Route::group(['prefix' => 'contracts-tracker/api'], function () {
 //Route::group(['prefix' => 'contracts-tracker/admin', 'middleware' => 'assign.guard:admins'], function () {
 // @FIXME: READD USER AUTHENTICATION!!
 Route::group(['prefix' => 'contracts-tracker/admin'], function () {
-    Route::get('/contract', [AdminContractController::class, 'index']);
-    Route::get('/contract/{id}', [AdminContractController::class, 'show']);
+    Route::get('/contract',        [AdminContractController::class, 'index']);
+    Route::get('/contract/{id}',   [AdminContractController::class, 'show']);
     Route::patch('/contract/{id}', [AdminContractController::class, 'show']);
+
+    Route::get('/available-contracts/', [AvailableContractController::class, 'index']);
+
 });
 
 
