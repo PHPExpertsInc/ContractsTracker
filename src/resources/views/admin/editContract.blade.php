@@ -7,12 +7,25 @@
     <title>{{$contractTitle}}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" async="">
+
+    <!-- jQuery UI Sunny theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/sunny/jquery-ui.min.css" integrity="sha512-t/yl85emxwarY4DzF8RUddWA+01SUMtURTPNve/zvFnzmor8mM2TMu2tWff/SdeXOEyrmenasu2R2/UEeDE+pw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/sunny/theme.min.css" integrity="sha512-D7I8i+5c8pBasr1IqvyTFr6wQFHKXJ9XWlij0Y3W9zBjofUcXY24dLaGJI8zLe252GhHuH6L6PvWKXGGrkA4DQ==" crossorigin="anonymous" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <!-- jQuery UI DatePicker.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js" integrity="sha512-RCgrAvvoLpP7KVgTkTctrUdv7C6t7Un3p1iaoPr1++3pybCyCsCZZN7QEHMZTcJTmcJ7jzexTO+eFpHk4OCFAg==" crossorigin="anonymous"></script>
+    <!-- jQuery UI [Has to be below DatePicker, for some reason... -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" />
     <style>
 header div#updateSuccessful {
     position: fixed;
     top: 0;
     right: 0;
 }
+
 section.contract {
     padding: 20px 30px;
     border: 1px black solid;
@@ -22,6 +35,7 @@ section.contract {
     text-align: justify !important;
     white-space: pre-wrap;
 }
+
 section.contract button {
     font-family: sans-serif;
 }
@@ -44,11 +58,12 @@ section.contract button {
     padding: 0;
 }
 
-    </style>
-    <script
-            src="https://code.jquery.com/jquery-3.5.1.min.js"
-            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-            crossorigin="anonymous"></script>
+input.datepicker {
+    width: 8em;
+    text-align: center;
+}
+
+</style>
 <script>
 // From: https://stackoverflow.com/a/48422455/430062
 function getSelected()
@@ -142,6 +157,49 @@ $(document).ready(function() {
             });
     });
 });
+
+$( function() {
+    // var elem = document.createElement('input');
+    // elem.setAttribute('type', 'date');
+    //
+    // if ( elem.type === 'text' ) {
+        $('input.datepicker').datepicker();
+
+        // @FIXME: Need to enforce MM/DD/YYYY With automatic handling of the "/", including copying and pasting.
+    //Put our input DOM element into a jQuery Object
+    // var $jqDate = jQuery('input.datepicker');
+    //
+// //Bind keyup/keydown to the input
+//     $jqDate.bind('keyup','keydown', function(e){
+//
+//         //To accomdate for backspacing, we detect which key was pressed - if backspace, do nothing:
+//         if(e.which !== 8) {
+//             var numChars = $jqDate.val().length;
+//             if(numChars === 2 || numChars === 5){
+//                 var thisVal = $jqDate.val();
+//                 thisVal += '/';
+//                 $jqDate.val(thisVal);
+//             }
+//         }
+//
+//
+//         date.addEventListener('input', function(e) {
+//             this.type = 'text';
+//             var input = this.value;
+//             if (/\D\/$/.test(input)) input = input.substr(0, input.length - 3);
+//             var values = input.split('/').map(function(v) {
+//                 return v.replace(/\D/g, '')
+//             });
+//             if (values[0]) values[0] = checkValue(values[0], 12);
+//             if (values[1]) values[1] = checkValue(values[1], 31);
+//             var output = values.map(function(v, i) {
+//                 return v.length == 2 && i < 2 ? v + ' / ' : v;
+//             });
+//             this.value = output.join('').substr(0, 14);
+//         });
+//     });
+    // }
+} );
 </script>
 </head>
 <body>
@@ -175,6 +233,10 @@ $(document).ready(function() {
             </div>
         </form>
     </section>
+
+{{--    <div id=”calendar”></div>--}}
+    <p><label><input type="text" class="datepicker" min="<?php echo date('Y-m-d'); ?>" autocomplete="off" placeholder="MM/DD/YYYY" /></label></p>
+
     <section class="contract" id="contract" contenteditable="true">
 {!! $contractText !!}
     </section>
