@@ -44,8 +44,8 @@ $(document).ready(function() {
                 </div>
                 <div class="contract-actions row col-md-4" style="background: #EAEAEA">
                     <div class="col-md-4"><a href="/contracts-tracker/admin/contract/{{ $contract->id }}">Edit</a></div>
-                    <div class="col-md-4"><a href="/contracts-tracker/admin/contract/{{ $contract->id }}">Track</a></div>
                     <div class="col-md-4"><a href="/contracts-tracker/admin/contract/{{ $contract->id }}">Deliver</a></div>
+                    <div class="col-md-4"><a href="/contracts-tracker/admin/contract/{{ $contract->id }}">Track</a></div>
                 </div>
             </li>
         @endforeach
