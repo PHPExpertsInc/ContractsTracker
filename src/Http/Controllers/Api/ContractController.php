@@ -54,6 +54,7 @@ class ContractController extends Controller
         $contract = Contract::query()->findOrFail($contractId);
         $contract->name = $request->input('name');
         $contract->description = $request->input('description');
+        $contract->is_active = $request->input('isFinalized');
         $contract->save();
 
         // Attempt to update the contract.
@@ -62,6 +63,7 @@ class ContractController extends Controller
         return new JsonResponse([
             'success'    => $saveStatus,
             'contractId' => $contractId,
+            'is_active'  => $request->input('isFinalized'),
         ]);
     }
 }

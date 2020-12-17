@@ -137,6 +137,7 @@ $(document).ready(function() {
         const contractData = {
             name: $('input#contract_name').val(),
             description: $('input#contract_description').val(),
+            isFinalized: $('input#contractIsFinished').prop('checked'),
             contract: $('section#contract').text()
         };
 
@@ -156,6 +157,15 @@ $(document).ready(function() {
                 alert(data);
             });
     });
+
+    $('input#contractIsFinished').change(function() {
+        if ($('input#contractIsFinished').prop('checked')) {
+            $('#contractFinishedWarning').removeClass('d-none');
+        } else {
+            $('#contractFinishedWarning').addClass('d-none');
+        }
+    });
+
 });
 
 $( function() {
@@ -230,6 +240,19 @@ $( function() {
                 <label for="contract_description"><strong>Description</strong></label>
                 <input type="text" class="form-control col-md-6" id="contract_description" placeholder="Briefly describe the contract's purpose."
                        value="A non-wordy basic Non-Disclosure Agreement">
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="input-group input-group-sm">
+                        <input type="checkbox" style="margin: 6px" id="contractIsFinished" value="0" />
+                        <label for="contractIsFinished"><strong>Finalize contract</strong></label>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-none" id="contractFinishedWarning">
+                <div class="alert alert-info col-md-6" role="alert">
+                    Warning: When this checkbox is selected, the contract will go live for delivery when you next save it.
+                </div>
             </div>
         </form>
     </section>
