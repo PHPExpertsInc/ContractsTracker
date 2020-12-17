@@ -14,7 +14,7 @@
 
 namespace PHPExperts\ContractsTracker\Http\Controllers\Admin;
 
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use PHPExperts\ContractsTracker\Models\Contract;
 
 class AvailableContractController
@@ -36,11 +36,17 @@ class AvailableContractController
         ]);
     }
 
-    public function show(string $contractId)
+    public function store(Request $request, string $contractId)
     {
-    }
+        $contract = Contract::query()->find($contractId);
 
-    public function store(Request $request)
-    {
+        $contractFile = storage_path() . "/app/contracts/{$contractId}.md";
+        $contractText = file_get_contents($contractFile);
+
+        return view('ContractsTracker::admin.prepContract', [
+            'contract'   => $contract,
+            'contractId' => $contractId,
+            'contractText'  => $contractText,
+        ]);
     }
 }
