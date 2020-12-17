@@ -15,12 +15,25 @@
 namespace PHPExperts\ContractsTracker\Http\Controllers\Admin;
 
 use Illuminate\Http\Client\Request;
+use PHPExperts\ContractsTracker\Models\Contract;
 
 class AvailableContractController
 {
     public function index()
     {
-        return view('ContractsTracker::admin.showContractTemplates', []);
+        $activeContracts = Contract::query()
+            ->select(['id', 'name', 'description'])
+            ->where(['is_active' => true])
+            ->get();
+        $contracts = Contract::query()
+            ->select(['id', 'name', 'description'])
+            ->where(['is_active' => false])
+            ->get();
+
+        return view('ContractsTracker::admin.showContractTemplates', [
+            'activeContracts' => $activeContracts,
+            'contracts' => $contracts,
+        ]);
     }
 
     public function show(string $contractId)
