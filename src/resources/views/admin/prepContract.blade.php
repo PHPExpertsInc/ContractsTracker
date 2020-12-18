@@ -119,7 +119,7 @@ input.datepicker {
                 const $template = $(`#${template}Template`);
 
                 // @FIXME: Needs to be a regexp search of needle.
-                while (html.search(needle)) {
+                while (html.search(needle) !== -1) {
                     window.htmlWidgetCounts[template] = ++window.htmlWidgetCounts[template] || 1;
                     $template.find(`input.${template}`).prop('name', template + '_' + window.htmlWidgetCounts[template]);
 
@@ -129,20 +129,22 @@ input.datepicker {
                 return html;
             };
 
-            $('section#contract').html(function(index,html) {
-                html = replaceHTML(/\[\[DATE PICKER]]/, html, 'datepicker');
-                html = replaceHTML(/\[\[APPLICANT NAME]]/, html, 'applicantName');
+            $('section#contract main').html(function(index,html) {
+                $('li.replaceText').each(function (index, item) {
+                    const $item = $(item);
+                    const needle = $item.data('needle');
+                    const fieldName = $item.data('name');
+
+                    html = replaceHTML(new RegExp('\{\{' + needle + '\}\}', 'g'), html, fieldName);
+                });
 
                 return html;
             });
         }
 
         $(document).ready(function() {
-            // $('.contract').text($('.contract').text().replace('\_', '_'))
-            $('.contract').text($('.contract').text().replaceAll('\\_', '_'));
-
             $('.replaceText').click(function () {
-                replaceSelectedText('[[' + $(this).data('text') + ']]');
+                replaceSelectedText('\{\{' + $(this).data('needle') + '}}');
                 insertHTMLWidgets();
                 $("div.popup-tag").css('display', 'none');
             });
@@ -162,53 +164,48 @@ input.datepicker {
                 recordSelectedText();
             });
 
-            $('button#editContract').click(function () {
-                const contractData = {
-                    name: $('input#contract_name').val(),
-                    description: $('input#contract_description').val(),
-                    isFinalized: $('input#contractIsFinished').prop('checked'),
-                    contract: $('section#contract').text()
+            $('button#deliverContract').click(function () {
+                const recipientData = {
+                    name:  $('input#recipient_name').val(),
+                    email: $('input#recipient_email').val(),
+                    city:  $('input#recipient_city').val(),
+                    state: $('input#recipient_state').val(),
                 };
 
-                $('#updateSuccessful').addClass('d-none');
-                $.ajax({
-                    url: '/contracts-tracker/api/contract/' + $('input#contractId').val(),
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    processData: false,
-                    dataType: 'json',
-                    data: JSON.stringify(contractData),
-                })
-                    .then(function (data) {
-                        $('#updateSuccessful').removeClass('d-none');
-                    })
-                    .catch(function (error) {
-                        alert(data);
-                    });
-            });
+                $('section#contractSideBySide').html($('section#contract main').clone());
 
-            $('input#contractIsFinished').change(function() {
-                if ($('input#contractIsFinished').prop('checked')) {
-                    $('#contractFinishedWarning').removeClass('d-none');
-                } else {
-                    $('#contractFinishedWarning').addClass('d-none');
-                }
+                $('section#contractSideBySide *').filter(':input').each(function(index, element) {
+                    let elementValue = $(element).val();
+
+                    if (elementValue === '') {
+                        elementValue = '__________________';
+                    }
+
+                    $(element).replaceWith(`<strong>${elementValue}</strong>`);
+                });
+
+                $('#updateSuccessful').addClass('d-none');
+                // $.ajax({
+                //     url: '/contracts-tracker/api/contract/' + $('input#contractId').val(),
+                //     type: 'PUT',
+                //     contentType: 'application/json',
+                //     processData: false,
+                //     dataType: 'json',
+                //     data: JSON.stringify(contractData),
+                // })
+                //     .then(function (data) {
+                //         $('#updateSuccessful').removeClass('d-none');
+                //     })
+                //     .catch(function (error) {
+                //         alert(data);
+                //     });
             });
 
             insertHTMLWidgets();
         });
 
         $( function() {
-            // var elem = document.createElement('input');
-            // elem.setAttribute('type', 'date');
-            //
-            // if ( elem.type === 'text' ) {
             $('input.datepicker').datepicker();
-
-            // @FIXME: Need to enforce MM/DD/YYYY With automatic handling of the "/", including copying and pasting.
-            //Put our input DOM element into a jQuery Object
-            // var $jqDate = jQuery('input.datepicker');
-            //
         } );
     </script>
 </head>
@@ -231,51 +228,60 @@ input.datepicker {
         <form>
             <input type="hidden" id="contractId" value="{{$contractId}}"/>
             <div class="form-group">
-                <label for="contract_name"><strong>Recipient's Name</strong></label>
+                <label for="recipient_name"><strong>Recipient's Name</strong></label>
                 <input type="text" class="form-control col-md-6" id="recipient_name" aria-describedby="emailHelp" placeholder="Recipient's name">
             </div>
             <div class="form-group">
-                <label for="contract_description"><strong>Recipient's Email</strong></label>
-                <input type="text" class="form-control col-md-6" id="contract_description" placeholder="Recipient's email">
+                <label for="recipient_email"><strong>Recipient's Email</strong></label>
+                <input type="text" class="form-control col-md-6" id="recipient_email" placeholder="Recipient's email">
             </div>
             <div class="form-group">
                 <div class="row col-md-12" style="margin-left: -30px">
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label for="recipient_city"><strong>Recipient's City</strong></label>
-                        <input type="text" id="recipient_city" placeholder="Recipient's city">
+                        <input type="text" class="col-md-11" id="recipient_city" placeholder="Recipient's city">
                     </div>
                     <div class="col-md-2">
                         <label for="recipient_state"><strong>State</strong></label><br/>
-                        <input type="text" class="col-md-3" id="recipient_state" placeholder="NY">
+                        <input type="text" class="col-md-4" id="recipient_state" placeholder="NY">
                     </div>
                 </div>
             </div>
         </form>
     </section>
+    <button class="btn btn-primary" id="deliverContract">Deliver Contract</button>
 
     {{--    <div id=”calendar”></div>--}}
     <div id="htmlTemplates" class="d-none">
         <span id="datepickerTemplate"><label><input type="text" class="datepicker" min="<?php echo date('Y-m-d'); ?>" autocomplete="off" placeholder="MM/DD/YYYY" /></label></span>
-        <span id="applicantNameTemplate"><label><input type="text" placeholder="Your Full Name" /></label></span>
+        <span id="applicantNameTemplate"><label><input type="text" class="applicantName" placeholder="Your Full Name" /></label></span>
+        <span id="applicantSignatureTemplate"><label><input type="submit" class="applicantSignature" placeholder="Your Full Name" /></label></span>
+        <span id="corporateSignatureTemplate"><label><input type="submit" class="corporateSignature" placeholder="Your Full Name" /></label></span>
+        <span id="corporateNameTemplate"><label><input type="text" class="corporateName" placeholder="Corporation's Name" /></label></span>
+        <span id="corporateRepTemplate"><label><input type="text" class="corporateRep" placeholder="Corp Rep's Full Name" /></label></span>
+        <span id="corporateTitleTemplate"><label><input type="text" class="corporateTitle" placeholder="Corp Rep's Title" /></label></span>
     </div>
 
-    <section class="contract" id="contract" contenteditable="true">
-        {!! $contractText !!}
+    <div class="row">
+    <section id="contract" class="contract col-md-6"><main>{!! $contractText !!}</main></section>
+{{--    <section class="contract col-md-6" id="contractSideBySide">--}}
+    <section id="contractSideBySide" class="contract col-md-6">
     </section>
-    <button class="btn btn-primary" id="editContract">Save Contract</button>
+    </div>
+    <button class="btn btn-primary" id="deliverContract">Deliver Contract</button>
     <div class="popup-tag" style="font-family: sans-serif; font-size: 90%">
         <ul>
-            <li class="replaceText" data-text="DATE PICKER"><i class="fas fa-calendar-check" title="date picker"></i> Date Picker</li>
-            <li class="replaceText" data-text="APPLICANT NAME"><i class="fas fa-underline"></i> Applicant Name</li>
-            <li class="replaceText" data-text="APPLICANT SIGNATURE"><i class="fas fa-file-signature" title="signature"></i> Applicant Signature</li>
-            <li class="replaceText" data-text="CORPORATE NAME"><i class="fas fa-underline"></i> Corporate Name</li>
-            <li class="replaceText" data-text="CORPORATE REP"><i class="fas fa-underline"></i> Corporate Rep</li>
-            <li class="replaceText" data-text="CORPORATE TITLE"><i class="fas fa-underline"></i> Corporate Title</li>
-            <li class="replaceText" data-text="CORPORATE SIGNATURE"><i class="fas fa-file-signature" title="signature"></i> Corporate Signature</li>
-            <li class="replaceText" data-text="CITY"><i class="fas fa-city" title="signature"></i> City</li>
-            <li class="replaceText" data-text="STATE"><i class="fas fa-flag" title="signature"></i> State</li>
-            <li class="replaceText" data-text="EMAIL"><i class="fas fa-envelope"></i> Email Address</li>
-            <li class="replaceText" data-text="PHONE"><i class="fas fa-phone"></i> Phone Number</li>
+            <li class="replaceText" data-name="datepicker"         data-needle="DATE PICKER"><i class="fas fa-calendar-check" title="date picker"></i> Date Picker</li>
+            <li class="replaceText" data-name="applicantName"      data-needle="APPLICANT NAME"><i class="fas fa-underline"></i> Applicant Name</li>
+{{--            <li class="replaceText" data-name="applicantSignature" data-needle="APPLICANT SIGNATURE"><i class="fas fa-file-signature" title="signature"></i> Applicant Signature</li>--}}
+            <li class="replaceText" data-name="corporateName"      data-needle="CORPORATE NAME"><i class="fas fa-underline"></i> Corporate Name</li>
+            <li class="replaceText" data-name="corporateRep"       data-needle="CORPORATE REP"><i class="fas fa-underline"></i> Corporate Rep</li>
+            <li class="replaceText" data-name="corporateTitle"     data-needle="CORPORATE TITLE"><i class="fas fa-underline"></i> Corporate Title</li>
+            <li class="replaceText" data-name="corporateSignature" data-needle="CORPORATE SIGNATURE"><i class="fas fa-file-signature" title="signature"></i> Corporate Signature</li>
+            <li class="replaceText" data-name="city"               data-needle="CITY"><i class="fas fa-city" title="signature"></i> City</li>
+            <li class="replaceText" data-name="state"              data-needle="STATE"><i class="fas fa-flag" title="signature"></i> State</li>
+            <li class="replaceText" data-name="email"              data-needle="EMAIL"><i class="fas fa-envelope"></i> Email Address</li>
+            <li class="replaceText" data-name="phone"              data-needle="PHONE"><i class="fas fa-phone"></i> Phone Number</li>
         </ul>
     </div>
 @endif

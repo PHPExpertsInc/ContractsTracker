@@ -114,7 +114,7 @@ $(document).ready(function() {
     $('.contract').text($('.contract').text().replaceAll('\\_', '_'));
 
     $('.replaceText').click(function () {
-        replaceSelectedText('[[' + $(this).data('text') + ']]');
+        replaceSelectedText('\{\{' + $(this).data('text') + '}}');
         $("div.popup-tag").css('display', 'none');
     });
 
@@ -131,6 +131,14 @@ $(document).ready(function() {
             $popupTag.css("display","none");
         }
         recordSelectedText();
+    });
+
+    $('input#contractIsFinished').change(function() {
+        if ($('input#contractIsFinished').prop('checked')) {
+            $('#contractFinishedWarning').removeClass('d-none');
+        } else {
+            $('#contractFinishedWarning').addClass('d-none');
+        }
     });
 
     $('button#editContract').click(function () {
@@ -157,59 +165,11 @@ $(document).ready(function() {
                 alert(data);
             });
     });
-
-    $('input#contractIsFinished').change(function() {
-        if ($('input#contractIsFinished').prop('checked')) {
-            $('#contractFinishedWarning').removeClass('d-none');
-        } else {
-            $('#contractFinishedWarning').addClass('d-none');
-        }
-    });
-
 });
 
 $( function() {
-    // var elem = document.createElement('input');
-    // elem.setAttribute('type', 'date');
-    //
-    // if ( elem.type === 'text' ) {
-        $('input.datepicker').datepicker();
-
-        // @FIXME: Need to enforce MM/DD/YYYY With automatic handling of the "/", including copying and pasting.
-    //Put our input DOM element into a jQuery Object
-    // var $jqDate = jQuery('input.datepicker');
-    //
-// //Bind keyup/keydown to the input
-//     $jqDate.bind('keyup','keydown', function(e){
-//
-//         //To accomdate for backspacing, we detect which key was pressed - if backspace, do nothing:
-//         if(e.which !== 8) {
-//             var numChars = $jqDate.val().length;
-//             if(numChars === 2 || numChars === 5){
-//                 var thisVal = $jqDate.val();
-//                 thisVal += '/';
-//                 $jqDate.val(thisVal);
-//             }
-//         }
-//
-//
-//         date.addEventListener('input', function(e) {
-//             this.type = 'text';
-//             var input = this.value;
-//             if (/\D\/$/.test(input)) input = input.substr(0, input.length - 3);
-//             var values = input.split('/').map(function(v) {
-//                 return v.replace(/\D/g, '')
-//             });
-//             if (values[0]) values[0] = checkValue(values[0], 12);
-//             if (values[1]) values[1] = checkValue(values[1], 31);
-//             var output = values.map(function(v, i) {
-//                 return v.length == 2 && i < 2 ? v + ' / ' : v;
-//             });
-//             this.value = output.join('').substr(0, 14);
-//         });
-//     });
-    // }
-} );
+    // @FIXME: Need to enforce MM/DD/YYYY With automatic handling of the "/", including copying and pasting.} );
+    $('input.datepicker').datepicker();
 </script>
 </head>
 <body>
