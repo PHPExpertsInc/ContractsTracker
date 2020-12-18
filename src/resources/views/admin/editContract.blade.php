@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{$contractTitle}}</title>
+    <title>{{  $contract->name }}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" async="">
 
@@ -233,18 +233,18 @@ $( function() {
             <div class="form-group">
                 <label for="contract_name"><strong>Contract Name</strong></label>
                 <input type="text" class="form-control col-md-6" id="contract_name" aria-describedby="emailHelp" placeholder="Contract's name"
-                       value="Short NDA">
+                       value="{{ $contract->name }}">
                 <small id="emailHelp" class="form-text text-muted">This is how we will refer to the contract everywhere else.</small>
             </div>
             <div class="form-group">
                 <label for="contract_description"><strong>Description</strong></label>
                 <input type="text" class="form-control col-md-6" id="contract_description" placeholder="Briefly describe the contract's purpose."
-                       value="A non-wordy basic Non-Disclosure Agreement">
+                       value="{{ $contract->description }}">
             </div>
             <div class="row">
                 <div class="col-sm-6">
                     <div class="input-group input-group-sm">
-                        <input type="checkbox" style="margin: 6px" id="contractIsFinished" value="0" />
+                        <input type="checkbox" style="margin: 6px" id="contractIsFinished" {{ $contract->is_active ? 'checked="checked"' : '' }} />
                         <label for="contractIsFinished"><strong>Finalize contract</strong></label>
                     </div>
                 </div>
