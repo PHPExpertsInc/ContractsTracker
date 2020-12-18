@@ -15,6 +15,7 @@
 namespace PHPExperts\ContractsTracker\Http\Controllers\Admin;
 
 use Illuminate\Http\Client\Request;
+use PHPExperts\ContractsTracker\Models\Contract;
 
 class ContractController
 {
@@ -25,7 +26,7 @@ class ContractController
 
     public function show(string $contractId)
     {
-        $contractName = 'SAMPLE';
+        $contract = Contract::query()->findOrFail($contractId);
 
         $contractFile = storage_path() . "/app/contracts/{$contractId}.md";
 
@@ -41,8 +42,8 @@ class ContractController
 
         return view('ContractsTracker::admin.editContract', [
             'foundContract' => true,
+            'contract'      => $contract,
             'contractId'    => $contractId,
-            'contractTitle' => $contractName,
             'contractText'  => $contractText,
         ]);
     }

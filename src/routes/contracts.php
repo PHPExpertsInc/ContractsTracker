@@ -84,8 +84,8 @@ Route::group(['prefix' => 'contracts-tracker/admin'], function () {
     Route::get('/contract/{id}',   [AdminContractController::class, 'show']);
     Route::patch('/contract/{id}', [AdminContractController::class, 'show']);
 
-    Route::get('/available-contracts/', [AvailableContractController::class, 'index']);
-
+    Route::get('/available-contracts/',     [AvailableContractController::class, 'index']);
+    Route::get('/available-contracts/{id}', [AvailableContractController::class, 'store']);
 });
 
 
