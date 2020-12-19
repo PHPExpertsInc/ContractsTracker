@@ -253,8 +253,33 @@ input.datepicker {
                     });
             });
 
+            $('button#deliverContract').click(function () {
+                const payload = {
+                    email: String($('input#recipient_email').val()).toLowerCase(),
+                    contractHTML: $('section#contractSideBySide').html(),
+                };
+
+                $.ajax({
+                    url: '/contracts-tracker/api/contracts/unsigned/' + unsignedContractId,
+                    type: 'PATCH',
+                    contentType: 'application/json',
+                    processData: false,
+                    dataType: 'json',
+                    data: JSON.stringify(payload),
+                })
+                    .then(function (data) {
+
+                        $('#deliverySuccessful').removeClass('d-none');
+                        $('section#contractSideBySide').html(data.contractHTML);
+                    })
+                    .catch(function (error) {
+                        alert(data);
+                    });
+            });
+
             insertHTMLWidgets();
         });
+
 
         $( function() {
             $('input.datepicker').datepicker();
@@ -281,35 +306,35 @@ input.datepicker {
             <input type="hidden" id="contractId" value="{{$contractId}}"/>
             <div class="form-group">
                 <label for="recipient_name"><strong>Recipient's Name</strong></label>
-                <input type="text" class="form-control col-md-6" id="recipient_name" aria-describedby="emailHelp" placeholder="Recipient's name" />
+                <input type="text" class="form-control col-md-6" id="recipient_name" aria-describedby="emailHelp" placeholder="Recipient's name" value="asdf asdf" />
             </div>
             <div class="form-group">
                 <label for="recipient_email"><strong>Recipient's Email</strong></label>
-                <input type="text" class="form-control col-md-6" id="recipient_email" placeholder="Recipient's email" />
+                <input type="text" class="form-control col-md-6" id="recipient_email" placeholder="Recipient's email" value="asdf@asdf.net" />
             </div>
             <div class="form-group">
                 <div class="row col-md-12" style="margin-left: -30px">
                     <div class="col-md-3">
                         <label for="recipient_city"><strong>Recipient's City</strong></label>
-                        <input type="text" class="col-md-11" id="recipient_city" placeholder="Recipient's city" />
+                        <input type="text" class="col-md-11" id="recipient_city" placeholder="Recipient's city" value="NYC" />
                     </div>
                     <div class="col-md-2">
                         <label for="recipient_state"><strong>State</strong></label><br/>
-                        <input type="text" class="col-md-4" id="recipient_state" placeholder="NY" />
+                        <input type="text" class="col-md-4" id="recipient_state" placeholder="NY" value="NY" />
                     </div>
                 </div>
             </div>
         </form>
     </section>
     <button class="btn btn-primary" id="prepareContract">Prepare Contract</button>
-    <button class="btn btn-secondary" id="deliverContract" disabled="disabled">Deliver Contract</button>
+    <button class="btn btn-secondary" id="deliverContract">Deliver Contract</button>
 
     <div id="errorList" class="d-none alert alert-danger">
         <h1>Missing Information</h1>
 
         <ul></ul>
     </div>
-    {{--    <div id=”calendar”></div>--}}
+
     <div id="htmlTemplates" class="d-none">
         <span id="datepickerTemplate"><label><input type="text" class="datepicker" min="<?php echo date('Y-m-d'); ?>" autocomplete="off" placeholder="MM/DD/YYYY" /></label></span>
         <span id="applicantNameTemplate"><label><input type="text" class="applicantName" placeholder="Your Full Name" /></label></span>

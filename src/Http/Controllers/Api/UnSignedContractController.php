@@ -18,6 +18,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use PHPExperts\ContractsTracker\Models\DeliveredContract;
 use PHPExperts\ContractsTracker\Models\RecipientDetails;
 
@@ -100,5 +101,21 @@ class UnSignedContractController extends Controller
         ];
 
         return new JsonResponse($results);
+    }
+
+    public function update(Request $request, string $unsignedContractId)
+    {
+        $this->validate($request, [
+            'email'        => 'required|email',
+            'contractHTML' => 'required',
+        ]);
+
+        $saveStatus = Storage::put("contracts/delivered/$unsignedContractId.md", $request->input('contractHTML'));
+
+        return new JsonResponse([
+            'success'             => $saveStatus,
+            'email'               => $request->input('email'),
+            'deliveredContractId' => $unsignedContractId,
+        ]);
     }
 }
