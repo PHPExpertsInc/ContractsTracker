@@ -64,17 +64,17 @@ Route::group(['prefix' => 'contracts-tracker/api'], function () {
     Route::get('/contract/{id}',   [ContractController::class, 'show']);
     Route::put('/contract/{id}',   [ContractController::class, 'update']);
 
-    Route::get('/unsigned',        [UnSignedContractController::class, 'index']);
-    Route::post('/unsigned',       [UnSignedContractController::class, 'store']);
-    Route::get('/unsigned/{id}',   [UnSignedContractController::class, 'show']);
-    Route::patch('/unsigned/{id}', [UnSignedContractController::class, 'update']);
+    Route::get('/contracts/unsigned',        [UnSignedContractController::class, 'index']);
+    Route::post('/contracts/unsigned',       [UnSignedContractController::class, 'store']);
+    Route::get('/contracts/unsigned/{id}',   [UnSignedContractController::class, 'show']);
+    Route::patch('/contracts/unsigned/{id}', [UnSignedContractController::class, 'update']);
 
-    Route::post('/signed',         [SignedContractController::class, 'store']);
-    Route::get('/signed/{id}',     [SignedContractController::class, 'show']);
-    Route::patch('/signed/{id}',   [SignedContractController::class, 'update']);
+    Route::post('/contracts/signed',         [SignedContractController::class, 'store']);
+    Route::get('/contracts/signed/{id}',     [SignedContractController::class, 'show']);
+    Route::patch('/contracts/signed/{id}',   [SignedContractController::class, 'update']);
 
-    Route::get('/signed/{id}/image',  [ArchivedContractController::class, 'show']);
-    Route::post('/signed/{id}/image', [ArchivedContractController::class, 'store']);
+    Route::get('/contracts/signed/{id}/image',  [ArchivedContractController::class, 'show']);
+    Route::post('/contracts/signed/{id}/image', [ArchivedContractController::class, 'store']);
 });
 
 //Route::group(['prefix' => 'contracts-tracker/admin', 'middleware' => 'assign.guard:admins'], function () {
