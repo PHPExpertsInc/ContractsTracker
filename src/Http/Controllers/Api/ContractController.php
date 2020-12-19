@@ -24,9 +24,9 @@ class ContractController extends Controller
 {
     public function show(string $contractId)
     {
-        return new JsonResponse([
-            'id' => $contractId,
-        ]);
+        $contract = Contract::query()->findOrFail($contractId);
+
+        return new JsonResponse($contract);
     }
 
     public function store(Request $request)
