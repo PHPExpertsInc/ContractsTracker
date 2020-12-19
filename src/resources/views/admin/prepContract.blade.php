@@ -68,6 +68,7 @@ input.datepicker {
     </style>
     <script>
         window.htmlWidgetCounts = new Map();
+        let unsignedContractId = '';
 
         // From: https://stackoverflow.com/a/48422455/430062
         function getSelected()
@@ -163,13 +164,49 @@ input.datepicker {
                 recordSelectedText();
             });
 
-            $('button#deliverContract').click(function () {
-                const recipientData = {
+            $('button#prepareContract').click(function () {
+                const validate = function (name, email) {
+                    // @see https://stackoverflow.com/a/46181/430062
+                    const validateEmail = function(email) {
+                        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                        return re.test(String(email).toLowerCase());
+                    }
+
+                    const $errorListUL = $errorList.find('ul');
+                    let hasErrors = false;
+                    $errorList.find('ul').html('');
+
+                    if (!name) {
+                        hasErrors = true;
+                        $errorListUL.append('<li>The Recipient\'s name has not been entered.</li>');
+                    }
+                    if (!email) {
+                        hasErrors = true;
+                        $errorListUL.append('<li>The Recipient\'s email has not been entered.</li>');
+                    }
+                    if (email && !validateEmail(email)) {
+                        hasErrors = true;
+                        $errorListUL.append('<li>The Recipient\'s email is not a valid email address.</li>');
+                    }
+
+                    return !hasErrors;
+                }
+
+                const recipient = {
                     name:  $('input#recipient_name').val(),
-                    email: $('input#recipient_email').val(),
+                    email: String($('input#recipient_email').val()).toLowerCase(),
                     city:  $('input#recipient_city').val(),
                     state: $('input#recipient_state').val(),
                 };
+
+                const $errorList = $('div#errorList');
+                $errorList.addClass('d-none');
+
+                if (!validate(recipient.name, recipient.email) === true) {
+                    $errorList.removeClass('d-none');
+
+                    return false;
+                }
 
                 $('section#contractSideBySide').html($('section#contract main').clone());
 
@@ -184,20 +221,36 @@ input.datepicker {
                 });
 
                 $('#updateSuccessful').addClass('d-none');
-                // $.ajax({
-                //     url: '/contracts-tracker/api/contract/' + $('input#contractId').val(),
-                //     type: 'PUT',
-                //     contentType: 'application/json',
-                //     processData: false,
-                //     dataType: 'json',
-                //     data: JSON.stringify(contractData),
-                // })
-                //     .then(function (data) {
-                //         $('#updateSuccessful').removeClass('d-none');
-                //     })
-                //     .catch(function (error) {
-                //         alert(data);
-                //     });
+                const payload = {
+                    contractId: '{{ $contract->id }}',
+                    contract: $('section#contractSideBySide').text(),
+                    recipient,
+                };
+
+                $.ajax({
+                    url: '/contracts-tracker/api/contracts/unsigned',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    processData: false,
+                    dataType: 'json',
+                    data: JSON.stringify(payload),
+                })
+                    .then(function (data) {
+                        unsignedContractId = data.deliveryInfo.id;
+
+                        $('#updateSuccessful').removeClass('d-none');
+                        $('section#contractSideBySide').html(data.contractHTML);
+                        $('button#prepareContract')
+                            .removeClass('btn-primary')
+                            .addClass('btn-secondary');
+                        $('button#deliverContract')
+                            .removeClass('btn-secondary')
+                            .addClass('btn-primary')
+                            .prop('disabled', false);
+                    })
+                    .catch(function (error) {
+                        alert(data);
+                    });
             });
 
             insertHTMLWidgets();
@@ -228,28 +281,34 @@ input.datepicker {
             <input type="hidden" id="contractId" value="{{$contractId}}"/>
             <div class="form-group">
                 <label for="recipient_name"><strong>Recipient's Name</strong></label>
-                <input type="text" class="form-control col-md-6" id="recipient_name" aria-describedby="emailHelp" placeholder="Recipient's name">
+                <input type="text" class="form-control col-md-6" id="recipient_name" aria-describedby="emailHelp" placeholder="Recipient's name" />
             </div>
             <div class="form-group">
                 <label for="recipient_email"><strong>Recipient's Email</strong></label>
-                <input type="text" class="form-control col-md-6" id="recipient_email" placeholder="Recipient's email">
+                <input type="text" class="form-control col-md-6" id="recipient_email" placeholder="Recipient's email" />
             </div>
             <div class="form-group">
                 <div class="row col-md-12" style="margin-left: -30px">
                     <div class="col-md-3">
                         <label for="recipient_city"><strong>Recipient's City</strong></label>
-                        <input type="text" class="col-md-11" id="recipient_city" placeholder="Recipient's city">
+                        <input type="text" class="col-md-11" id="recipient_city" placeholder="Recipient's city" />
                     </div>
                     <div class="col-md-2">
                         <label for="recipient_state"><strong>State</strong></label><br/>
-                        <input type="text" class="col-md-4" id="recipient_state" placeholder="NY">
+                        <input type="text" class="col-md-4" id="recipient_state" placeholder="NY" />
                     </div>
                 </div>
             </div>
         </form>
     </section>
-    <button class="btn btn-primary" id="deliverContract">Deliver Contract</button>
+    <button class="btn btn-primary" id="prepareContract">Prepare Contract</button>
+    <button class="btn btn-secondary" id="deliverContract" disabled="disabled">Deliver Contract</button>
 
+    <div id="errorList" class="d-none alert alert-danger">
+        <h1>Missing Information</h1>
+
+        <ul></ul>
+    </div>
     {{--    <div id=”calendar”></div>--}}
     <div id="htmlTemplates" class="d-none">
         <span id="datepickerTemplate"><label><input type="text" class="datepicker" min="<?php echo date('Y-m-d'); ?>" autocomplete="off" placeholder="MM/DD/YYYY" /></label></span>
@@ -267,7 +326,8 @@ input.datepicker {
     <section id="contractSideBySide" class="contract col-md-6">
     </section>
     </div>
-    <button class="btn btn-primary" id="deliverContract">Deliver Contract</button>
+    <button class="btn btn-primary" id="prepareContract">Prepare Contract</button>
+    <button class="btn btn-secondary" id="deliverContract" disabled="disabled">Deliver Contract</button>
     <div class="popup-tag" style="font-family: sans-serif; font-size: 90%">
         <ul>
             <li class="replaceText" data-name="datepicker"         data-needle="DATE PICKER"><i class="fas fa-calendar-check" title="date picker"></i> Date Picker</li>

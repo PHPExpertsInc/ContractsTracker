@@ -38,9 +38,10 @@ class ContractsTrackerMigration extends Migration
             $table->char('id', 22)->primary();
             $table->char('contract_id', 22);
             $table->string('email');
-            $table->dateTime('delivered_at');
+            $table->dateTime('delivered_at')->nullable();
             $table->dateTime('signed_at')->nullable();
-            $table->string('signed_contract_url');
+            $table->text('signed_contract_url')->nullable();
+            $table->timestamps();
 
             $table->foreign('contract_id')
                 ->references('id')

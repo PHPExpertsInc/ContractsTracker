@@ -14,10 +14,14 @@
 
 namespace PHPExperts\ContractsTracker\Http\Controllers\Api;
 
-use Illuminate\Http\Client\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use PHPExperts\ContractsTracker\Models\DeliveredContract;
+use PHPExperts\ContractsTracker\Models\RecipientDetails;
 
-class UnSignedContractController
+class UnSignedContractController extends Controller
 {
     public function index()
     {
@@ -54,5 +58,47 @@ class UnSignedContractController
 
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'contract'        => 'required',
+            'contractId'      => 'required',
+            'recipient.name'  => 'required',
+            'recipient.email' => 'required|email',
+        ]);
+
+        DB::beginTransaction();
+        RecipientDetails::query()->create([
+            'contract_id' => $request->input('contractId'),
+            'name'        => $request->input('recipient.name'),
+            'email'       => $request->input('recipient.email'),
+            'address'     => $request->input('recipient.address'),
+            'city'        => $request->input('recipient.city'),
+            'state'       => $request->input('recipient.state'),
+            /** @todo: Add internation support. */
+            'country'     => 'US',
+            'zipcode'     => $request->input('recipient.zipcode'),
+            'phone'       => $request->input('recipient.phone'),
+        ]);
+
+        /** @var DeliveredContract $contract */
+        $deliveryPacket = DeliveredContract::query()->create([
+            'contract_id' => $request->input('contractId'),
+            'email'       => $request->input('recipient.email'),
+        ]);
+        DB::commit();
+
+        // Convert the contract to HTML and return it for proofing.
+        $Parsedown = new \Parsedown();
+        // Escape underscores.
+        $contractText = $request->input('contract');
+        $contractText = str_replace('_', '\_', $contractText);
+
+        $contractHTML = $Parsedown->text($contractText);
+
+        $results = [
+            'deliveryInfo' => $deliveryPacket,
+            'contractHTML' => $contractHTML,
+        ];
+
+        return new JsonResponse($results);
     }
 }
