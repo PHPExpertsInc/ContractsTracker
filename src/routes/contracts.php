@@ -59,6 +59,7 @@ Route::group(['prefix' => 'contracts-tracker/public'], function () {
 });
 
 Route::group(['prefix' => 'contracts-tracker/api'], function () {
+    // Upload a new contract in Markdown...
     Route::post('/contract',       [ContractController::class, 'store']);
     // This is the API request that will deliver details of how to find the contract to the frontend.
     Route::get('/contract/{id}',   [ContractController::class, 'show']);
@@ -87,19 +88,3 @@ Route::group(['prefix' => 'contracts-tracker/admin'], function () {
     Route::get('/available-contracts/',     [AvailableContractController::class, 'index']);
     Route::get('/available-contracts/{id}', [AvailableContractController::class, 'store']);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

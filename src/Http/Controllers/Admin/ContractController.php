@@ -14,10 +14,13 @@
 
 namespace PHPExperts\ContractsTracker\Http\Controllers\Admin;
 
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Storage;
 use PHPExperts\ContractsTracker\Models\Contract;
 
-class ContractController
+class ContractController extends BaseController
 {
     public function index()
     {
@@ -48,7 +51,26 @@ class ContractController
         ]);
     }
 
+    /**
+     * Uploads a new contract.
+     */
     public function store(Request $request)
     {
+        $data = $this->validate($request, [
+            'name'         => 'required',
+            'description'  => 'required',
+            'contractText' => 'required',
+        ]);
+
+        /** @var Contract $contract */
+        $contract = Contract::query()->create($data);
+        $contractId = $contract->id;
+
+        // Store the actual Contract in the filesystem.
+        $contractFile = storage_path() . "/app/contracts/{$contractId}.md";
+
+        Storage::put($contractFile, $request->input('contractText'));
+
+        return new JsonResponse($contract);
     }
 }
