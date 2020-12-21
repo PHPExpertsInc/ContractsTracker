@@ -20,9 +20,7 @@ class ContractController
 {
     public function show(string $contractId)
     {
-        $contractName = 'SAMPLE';
-
-        $contractFile = storage_path() . "/contracts/{$contractId}.md";
+        $contractFile = storage_path() . "/app/contracts/delivered/{$contractId}.md";
         //$contract = file_get_contents($contractFile)
 
         if (!file_exists($contractFile)) {
