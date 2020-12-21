@@ -306,21 +306,21 @@ input.datepicker {
             <input type="hidden" id="contractId" value="{{$contractId}}"/>
             <div class="form-group">
                 <label for="recipient_name"><strong>Recipient's Name</strong></label>
-                <input type="text" class="form-control col-md-6" id="recipient_name" aria-describedby="emailHelp" placeholder="Recipient's name" value="asdf asdf" />
+                <input type="text" class="form-control col-md-6" id="recipient_name" aria-describedby="emailHelp" placeholder="Recipient's name" />
             </div>
             <div class="form-group">
                 <label for="recipient_email"><strong>Recipient's Email</strong></label>
-                <input type="text" class="form-control col-md-6" id="recipient_email" placeholder="Recipient's email" value="asdf@asdf.net" />
+                <input type="text" class="form-control col-md-6" id="recipient_email" placeholder="Recipient's email" />
             </div>
             <div class="form-group">
                 <div class="row col-md-12" style="margin-left: -30px">
                     <div class="col-md-3">
                         <label for="recipient_city"><strong>Recipient's City</strong></label>
-                        <input type="text" class="col-md-11" id="recipient_city" placeholder="Recipient's city" value="NYC" />
+                        <input type="text" class="col-md-11" id="recipient_city" placeholder="Recipient's city" />
                     </div>
                     <div class="col-md-2">
                         <label for="recipient_state"><strong>State</strong></label><br/>
-                        <input type="text" class="col-md-4" id="recipient_state" placeholder="NY" value="NY" />
+                        <input type="text" class="col-md-4" id="recipient_state" placeholder="NY" />
                     </div>
                 </div>
             </div>

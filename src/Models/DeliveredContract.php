@@ -15,7 +15,10 @@
 namespace PHPExperts\ContractsTracker\Models;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Parsedown;
 use PHPExperts\ConciseUuid\ConciseUuidModel;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
  * @property string $id
@@ -41,4 +44,34 @@ class DeliveredContract extends ConciseUuidModel
         'delivered_at' => 'datetime:Y-m-d',
         'signed_at'    => 'datetime:Y-m-d',
     ];
+
+    /** @var Parsedown */
+    private $parsedown;
+
+    public function __construct(array $attributes = [], Parsedown $parsedown = null)
+    {
+        if (!$parsedown) {
+            $parsedown = new \Parsedown();
+        }
+        $this->parsedown = $parsedown;
+
+        parent::__construct($attributes);
+    }
+
+    public function fetchContract(): string
+    {
+        if (Storage::exists("contracts/delivered/{$this->id}.md")) {
+            throw new FileNotFoundException();
+        }
+
+        return Storage::get("contracts/delivered/{$this->id}.md");
+    }
+
+    public function fetchContractAsHTML(): string
+    {
+        $contractText = $this->fetchContract();
+        $contractHTML = $this->parsedown->text($contractText);
+
+        return $contractHTML;
+    }
 }
