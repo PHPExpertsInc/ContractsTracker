@@ -170,6 +170,7 @@ $(document).ready(function() {
 $( function() {
     // @FIXME: Need to enforce MM/DD/YYYY With automatic handling of the "/", including copying and pasting.} );
     $('input.datepicker').datepicker();
+});
 </script>
 </head>
 <body>
@@ -218,7 +219,7 @@ $( function() {
     </section>
 
 {{--    <div id=”calendar”></div>--}}
-    <p><label><input type="text" class="datepicker" min="<?php echo date('Y-m-d'); ?>" autocomplete="off" placeholder="MM/DD/YYYY" /></label></p>
+    <button class="btn btn-primary" id="editContract">Save Contract</button>
 
     <section class="contract" id="contract" contenteditable="true">
 {!! $contractText !!}
