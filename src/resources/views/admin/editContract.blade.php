@@ -26,6 +26,12 @@ header div#updateSuccessful {
     right: 0;
 }
 
+div#activeContractBox {
+    border: 2px #999 dotted;
+    margin: 10px;
+    max-width: 42em;
+}
+
 section.contract {
     padding: 20px 30px;
     border: 1px black solid;
@@ -138,6 +144,7 @@ $(document).ready(function() {
             $('#contractFinishedWarning').removeClass('d-none');
         } else {
             $('#contractFinishedWarning').addClass('d-none');
+            $('#activeContractBox').addClass('d-none');
         }
     });
 
@@ -148,6 +155,10 @@ $(document).ready(function() {
             isFinalized: $('input#contractIsFinished').prop('checked'),
             contract: $('section#contract').text()
         };
+
+        if (contractData.isFinalized) {
+            $('#activeContractBox').removeClass('d-none');
+        }
 
         $('#updateSuccessful').addClass('d-none');
         $.ajax({
@@ -220,6 +231,14 @@ $( function() {
 
 {{--    <div id=”calendar”></div>--}}
     <button class="btn btn-primary" id="editContract">Save Contract</button>
+
+    <div id="activeContractBox" class="{{ $contract->is_active ? '' : 'd-none'  }} alert alert-light" role="alert">
+        <h3>Next steps</h3>
+        <p>
+            You can now go to the <a href="/contracts-tracker/admin/available-contracts/"><strong>Available Contracts</strong></a>
+            page to prepare this contract for delivery.
+        </p>
+    </div>
 
     <section class="contract" id="contract" contenteditable="true">
 {!! $contractText !!}

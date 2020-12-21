@@ -36,17 +36,18 @@ class AvailableContractController
         ]);
     }
 
-    public function store(Request $request, string $contractId)
+    public function store(string $contractId)
     {
+        /** @var Contract $contract */
         $contract = Contract::query()->find($contractId);
 
         $contractFile = storage_path() . "/app/contracts/{$contractId}.md";
         $contractText = file_get_contents($contractFile);
 
         return view('ContractsTracker::admin.prepContract', [
-            'contract'   => $contract,
-            'contractId' => $contractId,
-            'contractText'  => $contractText,
+            'contract'     => $contract,
+            'contractId'   => $contractId,
+            'contractText' => $contractText,
         ]);
     }
 }
